@@ -1,11 +1,11 @@
-#include "Engine.h"
+#include "Game/BaseGameEngine.h"
 
 int main()
 {
 	// Gets a new instance of the engine directly and runs it.
-	Engine::Init();
-	Engine::GetEngine()->Run();
-	Engine::Shutdown();
+	BaseGameEngine::Init();
+	BaseGameEngine::GetEngine()->Run();
+	BaseGameEngine::Shutdown();
 
 	// Quit in the usual way when the engine is stopped
 	return 0;

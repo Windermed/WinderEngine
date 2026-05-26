@@ -36,9 +36,9 @@ void Player::HandleInput(float dt)
 	Position.y = max(0.0f, min((float)SCREEN_HEIGHT, Position.y));
 }
 
-void Player::Update(float dt)
+void Player::Update(float DeltaTime)
 {
-	HandleInput(dt);
+	HandleInput(DeltaTime);
 	PlayerSprite.setPosition(Position);
 }
 

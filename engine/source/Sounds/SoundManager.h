@@ -27,10 +27,10 @@ private:
 	string ResolvePath(const string& fileName);
 private:
 
-	map<string, SoundBuffer> m_buffers;
-	map<string, unique_ptr<Sound>> m_sounds;
+	map<string, SoundBuffer> Buffers;
+	map<string, unique_ptr<Sound>> Sounds;
 
-	map<string, vector<unique_ptr<Sound>>> m_soundPool;
-	map<string, int> m_poolIndex;
+	map<string, vector<unique_ptr<Sound>>> SoundPool;
+	map<string, int> PoolIndex;
 };
 

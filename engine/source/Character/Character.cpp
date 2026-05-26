@@ -20,9 +20,9 @@ void Character::HandleInput(float dt)
 
 }
 
-void Character::Update(float dt)
+void Character::Update(float DeltaTime)
 {
-	HandleInput(dt);
+	HandleInput(DeltaTime);
 	PlayerSprite.setPosition(Position);
 }
 

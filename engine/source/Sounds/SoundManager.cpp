@@ -18,7 +18,7 @@ SoundManager::SoundManager()
 			string fileName = entry.path().filename().string();
 
 			// skips if it already loaded
-			if (m_buffers.find(fileName) != m_buffers.end())
+			if (Buffers.find(fileName) != Buffers.end())
 				continue;
 
 			SoundBuffer buffer;
@@ -29,8 +29,8 @@ SoundManager::SoundManager()
 				Message("Ensure that the audio file you loaded is valid or exists!")
 				continue;
 			}
-			m_buffers[fileName] = buffer;
-			m_sounds[fileName] = make_unique<Sound>(m_buffers[fileName]);
+			Buffers[fileName] = buffer;
+			Sounds[fileName] = make_unique<Sound>(Buffers[fileName]);
 
 		}
 	}
@@ -42,7 +42,7 @@ void SoundManager::PlaySound(const string& fileName, float volume, bool bLoop)
 	string resolvedAudioPath = ResolvePath(fileName);
 
 	// let's load our audio.
-	if (m_buffers.find(resolvedAudioPath) == m_buffers.end())
+	if (Buffers.find(resolvedAudioPath) == Buffers.end())
 	{
 		SoundBuffer buffer;
 		if (!buffer.loadFromFile(resolvedAudioPath))
@@ -51,14 +51,14 @@ void SoundManager::PlaySound(const string& fileName, float volume, bool bLoop)
 			Message("Ensure that the audio file you loaded is valid or exists!")
 			return;
 		}
-		m_buffers[resolvedAudioPath] = buffer;
-		m_sounds[resolvedAudioPath] = make_unique<Sound>(m_buffers[resolvedAudioPath]);
+		Buffers[resolvedAudioPath] = buffer;
+		Sounds[resolvedAudioPath] = make_unique<Sound>(Buffers[resolvedAudioPath]);
 	}
 
 	// we'll allow loops assuming bLoop is set to true.
-	m_sounds[resolvedAudioPath]->setVolume(volume);
-	m_sounds[resolvedAudioPath]->setLooping(bLoop);
-	m_sounds[resolvedAudioPath]->play();
+	Sounds[resolvedAudioPath]->setVolume(volume);
+	Sounds[resolvedAudioPath]->setLooping(bLoop);
+	Sounds[resolvedAudioPath]->play();
 }
 
 void SoundManager::PlaySoundPooled(const string& fileName, float volume)
@@ -66,7 +66,7 @@ void SoundManager::PlaySoundPooled(const string& fileName, float volume)
 	string resolvedFile = ResolvePath(fileName);
 
 	// load buffer if needed.
-	if (m_buffers.find(resolvedFile) == m_buffers.end())
+	if (Buffers.find(resolvedFile) == Buffers.end())
 	{
 		SoundBuffer buffer;
 		if (!buffer.loadFromFile(resolvedFile))
@@ -75,30 +75,30 @@ void SoundManager::PlaySoundPooled(const string& fileName, float volume)
 			Message("Ensure that the file is valid and try again!");
 			return;
 		}
-		m_buffers[resolvedFile] = buffer;
+		Buffers[resolvedFile] = buffer;
 	}
 
 	// creates a pool of 8 instances if one does not exist.
-	if (m_soundPool.find(resolvedFile) == m_soundPool.end())
+	if (SoundPool.find(resolvedFile) == SoundPool.end())
 	{
-		m_soundPool[resolvedFile].reserve(8);
+		SoundPool[resolvedFile].reserve(8);
 
 		// we must now construct with buffers instead.
 		for (int i = 0; i < 8; i++)
 		{
-			m_soundPool[resolvedFile].push_back(make_unique<Sound>(m_buffers[resolvedFile]));
+			SoundPool[resolvedFile].push_back(make_unique<Sound>(Buffers[resolvedFile]));
 		}
-		m_poolIndex[resolvedFile] = 0;
+		PoolIndex[resolvedFile] = 0;
 	}
 
 	// get the next avaliabel sound in pool
-	int& index = m_poolIndex[resolvedFile];
-	Sound& sound = *m_soundPool[resolvedFile][index];
+	int& index = PoolIndex[resolvedFile];
+	Sound& sound = *SoundPool[resolvedFile][index];
 	sound.setVolume(volume);
 	sound.play();
 
 	// advance to the next slot.
-	index = (index + 1) % m_soundPool[resolvedFile].size();
+	index = (index + 1) % SoundPool[resolvedFile].size();
 }
 
 void SoundManager::StopSound(const string& fileName)
@@ -106,8 +106,8 @@ void SoundManager::StopSound(const string& fileName)
 	// let's resolve the actual path first.
 	string resolvedAudioPath = ResolvePath(fileName);
 
-	auto it = m_sounds.find(fileName);
-	if (it != m_sounds.end())
+	auto it = Sounds.find(fileName);
+	if (it != Sounds.end())
 	{
 		it->second->stop();
 	}
@@ -115,7 +115,7 @@ void SoundManager::StopSound(const string& fileName)
 
 void SoundManager::StopAll()
 {
-	for (auto& pair : m_sounds)
+	for (auto& pair : Sounds)
 		pair.second->stop();
 }
 

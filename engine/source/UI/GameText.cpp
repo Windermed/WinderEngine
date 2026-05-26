@@ -2,8 +2,8 @@
 #include "Engine.h"
 #include "Core/Constants.h"
 
-Font GameText::m_font;
-bool GameText::m_bIsFontLoaded = false;
+Font GameText::Font;
+bool GameText::bIsFontLoaded = false;
 
 void GameText::Init(String text, Vector2f position, unsigned int fontSize, Color color)
 {
@@ -65,11 +65,11 @@ Color GameText::HueToColor(float hue)
 
 void GameText::DrawText()
 {
-	if (!m_bIsTextVisible) return;
+	if (!bIsTextVisible) return;
 
-	if (m_bRainbowEffect)
+	if (bUseRainbowEffect)
 	{
-		float t = m_rainbowClock.getElapsedTime().asSeconds();
+		float t = RainbowClock.getElapsedTime().asSeconds();
 		setGlyphPreProcessor([t, this](const Text::ShapedGlyph& glyph, std::uint32_t /*style*/, Color& fillColor, Color& /*outlineColor*/, float& /*outlineThickness*/)
 		{
 			float hue = fmod(t * 60.0f + glyph.cluster * 25.0f, 360.0f);

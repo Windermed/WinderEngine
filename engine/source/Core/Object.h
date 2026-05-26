@@ -10,7 +10,7 @@ public:
 	virtual ~Object() {};
 
 	// core loop
-	virtual void Update(float dt) = 0;
+	virtual void Update(float DeltaTime) = 0;
 	virtual void Draw(RenderWindow& window) = 0;
 
 	virtual bool IsOffScreen() const { return false; }

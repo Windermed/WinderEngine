@@ -73,16 +73,16 @@ public:
 	// get font
 	static Font& GetFont()
 	{
-		if (!m_bIsFontLoaded)
+		if (!bIsFontLoaded)
 		{
-			if (!m_font.openFromFile(FONT_PATH))
+			if (!Font.openFromFile(FONT_PATH))
 			{
 				throw runtime_error("Font has failed to load!");
 			}
 
-			m_bIsFontLoaded = true;
+			bIsFontLoaded = true;
 		}
-		return m_font;
+		return Font;
 	}
 
 	static Color HueToColor(float hue);
@@ -95,65 +95,65 @@ public:
 
 	void FlashText(float flashRate = 0.5f)
 	{
-		m_bIsTextFlashing = true;
-		m_bIsTextVisible = true;
-		m_flashRate = flashRate;
-		m_flashTimer = 0.0f;
-		m_flashDuration = -1.0f;
-		m_elapsedTime = 0.0f;
+		bIsTextFlashing = true;
+		bIsTextVisible = true;
+		FlashRate = flashRate;
+		FlashTimer = 0.0f;
+		FlashDuration = -1.0f;
+		ElapsedTime = 0.0f;
 	}
 
 	// Flash for a specified duration then stop.
 	void FlashText(float duration, float flashRate = 0.5f)
 	{
-		m_bIsTextFlashing = true;
-		m_bIsTextVisible = true;
-		m_flashRate = flashRate;
-		m_flashTimer = 0.0f;
-		m_flashDuration = duration;
-		m_elapsedTime = 0.0f;
+		bIsTextFlashing = true;
+		bIsTextVisible = true;
+		FlashRate = flashRate;
+		FlashTimer = 0.0f;
+		FlashDuration = duration;
+		ElapsedTime = 0.0f;
 	}
 
 	// stops flashing text.
 	void StopFlash()
 	{
-		m_bIsTextFlashing = false;
-		m_bIsTextVisible = true;
-		m_flashTimer = 0.0f;
-		m_elapsedTime - 0.0f;
+		bIsTextFlashing = false;
+		bIsTextVisible = true;
+		FlashTimer = 0.0f;
+		ElapsedTime - 0.0f;
 	}
 
 	void UpdateFlash(float dt)
 	{
-		if (!m_bIsTextFlashing) return;
+		if (!bIsTextFlashing) return;
 
-		m_flashTimer += dt;
-		m_elapsedTime += dt;
+		FlashTimer += dt;
+		ElapsedTime += dt;
 
 		// toggle visibility on flash rate.
-		if (m_flashTimer > -m_flashRate)
+		if (FlashTimer > -FlashRate)
 		{
-			m_bIsTextVisible = !m_bIsTextVisible;
-			m_flashTimer = 0.0f;
+			bIsTextVisible = !bIsTextVisible;
+			FlashTimer = 0.0f;
 		}
 
 		// stop after specified duration if it's not infintite
-		if (m_flashDuration > 0.0f && m_elapsedTime >= m_flashDuration)
+		if (FlashDuration > 0.0f && ElapsedTime >= FlashDuration)
 		{
 			StopFlash();
 		}
 	}
 
-	bool IsTextFlashing() const { return m_bIsTextFlashing; }
+	bool IsTextFlashing() const { return bIsTextFlashing; }
 
 	// sets a rainbow wave color effect to text.
 	void SetRainbowEffect(bool bEnabled)
 	{
-		m_bRainbowEffect = bEnabled;
+		bUseRainbowEffect = bEnabled;
 		
 		if (bEnabled)
 		{
-			m_rainbowClock.restart();
+			RainbowClock.restart();
 		}
 		if (!bEnabled)
 		{
@@ -163,17 +163,18 @@ public:
 
 	}
 
-	bool IsRainbowEffect() const { return m_bRainbowEffect; }
+	bool IsRainbowEffect() const { return bUseRainbowEffect; }
 
 	// Updates String and you can optionally re center it.
 	//void SetText(String text, bool bRecenterText = false);
-
-	// centers horizontally at a specific Y
-	void CenterAtY(float y)
+	
+	// center horizontally and positions relative to screen center.
+	// positive Y moves down, negative Y moves up.
+	void CenterAtY(float offsetFromCenter)
 	{
 		FloatRect bounds = getLocalBounds();
 		setOrigin({ bounds.position.x + bounds.size.x / 2.0f, bounds.position.y + bounds.size.y / 2.0f });
-		setPosition({ SCREEN_WIDTH / 2.0f, y });
+		setPosition({ SCREEN_WIDTH / 2.0f, (SCREEN_HEIGHT / 2.0f) + offsetFromCenter });
 	}
 
 private:
@@ -182,23 +183,23 @@ private:
 
 private:
 
-	static Font m_font; // TODO: MAKE FONT CONFIGURABLE.
-	static bool m_bIsFontLoaded;
+	static Font Font;
+	static bool bIsFontLoaded;
 
-	bool m_bIsTextFlashing = false;
-	bool m_bIsTextVisible = true;
-	float m_flashRate = 0.5f;
-	float m_flashTimer = 0.0f;
+	bool bIsTextFlashing = false;
+	bool bIsTextVisible = true;
+	float FlashRate = 0.5f;
+	float FlashTimer = 0.0f;
 
 	// set to -1 for infinite.
-	float m_flashDuration = -1.0f;
+	float FlashDuration = -1.0f;
 
-	float m_elapsedTime = 0.0f;
+	float ElapsedTime = 0.0f;
 
 	// enable a rainbow effect to text.
-	bool m_bRainbowEffect = false;
+	bool bUseRainbowEffect = false;
 
 	// the rainbow timer.
-	Clock m_rainbowClock;
+	Clock RainbowClock;
 };
 

@@ -8,28 +8,30 @@
 using namespace sf;
 using namespace std;
 
+class Engine;
+
 class GameSprite : public Sprite
 {
 public:
 	// our default GameSprite constructor
-	GameSprite() : Sprite(m_texture)
+	GameSprite() : Sprite(Texture)
 	{
 		//(void);
 		Load("content/textures/spr_placeholder.png"); // loads a default sprite.
 	}
 
 	// copy constructor as sf::Texture doesn't copy well.
-	GameSprite(const GameSprite& other) : Sprite(m_texture)
+	GameSprite(const GameSprite& other) : Sprite(Texture)
 	{
-		m_filename = other.m_filename;
-		m_bIsLoaded = other.m_bIsLoaded;
+		FileName = other.FileName;
+		bIsLoaded = other.bIsLoaded;
 		
 		// if sprite loads.
-		if (m_bIsLoaded)
+		if (bIsLoaded)
 		{
 			// reload textures
-			m_texture.loadFromFile(m_filename);
-			setTexture(m_texture, true);
+			Texture.loadFromFile(FileName);
+			setTexture(Texture, true);
 			CenterOrigin();
 
 			// once reloaded, we preserve the OG transform.
@@ -45,14 +47,14 @@ public:
 		// avoid reloading if we assign to self.
 		if (this != &other)
 		{
-			m_filename = other.m_filename;
-			m_bIsLoaded = other.m_bIsLoaded;
+			FileName = other.FileName;
+			bIsLoaded = other.bIsLoaded;
 
-			if (m_bIsLoaded)
+			if (bIsLoaded)
 			{
 				// reload a texture so this instance can have it's own texture reference.
-				m_texture.loadFromFile(m_filename);
-				setTexture(m_texture, true);
+				Texture.loadFromFile(FileName);
+				setTexture(Texture, true);
 				CenterOrigin();
 
 				// again, we will preserve the OG transform.
@@ -65,16 +67,16 @@ public:
 	}
 
 	// constructor that loads from file.
-	GameSprite(const string& filename) : Sprite(m_texture) { Load(filename); }
+	GameSprite(const string& filename) : Sprite(Texture) { Load(filename); }
 
 	// load with position.
-	GameSprite(const string& filename, Vector2f position) : Sprite(m_texture)
+	GameSprite(const string& filename, Vector2f position) : Sprite(Texture)
 	{
 		Load(filename);
 		setPosition(position);
 	}
 
-	GameSprite(const string& filename, Vector2f position, Vector2f scale) : Sprite(m_texture)
+	GameSprite(const string& filename, Vector2f position, Vector2f scale) : Sprite(Texture)
 	{
 		Load(filename);
 		setPosition(position);
@@ -82,7 +84,7 @@ public:
 	}
 
 	// load with position scale and rotation.
-	GameSprite(const string& filename, Vector2f position, Vector2f scale, float rotation) : Sprite(m_texture)
+	GameSprite(const string& filename, Vector2f position, Vector2f scale, float rotation) : Sprite(Texture)
 	{
 		Load(filename);
 		setPosition(position);
@@ -93,31 +95,33 @@ public:
 	// easily load textures from a file.
 	bool Load(const string& filename)
 	{
-		m_filename = filename;
+		FileName = filename;
 
-		if (!m_texture.loadFromFile(filename))
+		if (!Texture.loadFromFile(filename))
 		{
 			Message("ERROR: GameSprite has failed to load %s" << filename.c_str());
 			Message("The Sprite is either invalid or NOT in directory.");
-			m_bIsLoaded = false;
-			return m_bIsLoaded;
+			bIsLoaded = false;
+			return bIsLoaded;
 		}
 
-		setTexture(m_texture, true);
+		setTexture(Texture, true);
 		CenterOrigin();
 
-		m_bIsLoaded = true;
+		bIsLoaded = true;
 
-		return m_bIsLoaded;
+		return bIsLoaded;
 	}
 
 
 	// reload sprite from the same file.
 	bool Reload()
 	{
-		if (m_filename.empty()) return false;
-		return Load(m_filename);
+		if (FileName.empty()) return false;
+		return Load(FileName);
 	}
+
+	void DrawSprite();
 
 	// center origin on the sprite's bounds
 	void CenterOrigin()
@@ -154,9 +158,16 @@ public:
 		SetOpacity(val);
 	}
 
+	// positions relative to screen center
+	// positive moves right or down, negative will move left or up.
+	void SetCenterPosition(Vector2f offset = { 0.0f, 0.0f })
+	{
+		setPosition({ (SCREEN_WIDTH / 2.0f) + offset.x, (SCREEN_HEIGHT / 2.0f) + offset.y });
+	}
+
 	// our getters
-	bool IsLoaded() const { return m_bIsLoaded; }
-	string GetFileName() const { return m_filename; }
+	bool IsLoaded() const { return bIsLoaded; }
+	string GetFileName() const { return FileName; }
 
 	Vector2f GetSize() const
 	{
@@ -165,9 +176,9 @@ public:
 	}
 
 private:
-	Texture m_texture;
-	string m_filename;
-	bool m_bIsLoaded = false;
+	Texture Texture;
+	string FileName;
+	bool bIsLoaded = false;
 
 
 };
