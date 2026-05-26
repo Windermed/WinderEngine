@@ -34,13 +34,15 @@ public:
 	void Run();
 
 	/* Getter of Current Window */
-	RenderWindow& GetWindow() { return m_Window; };
+	RenderWindow& GetWindow() { return Window; };
 
 	/* Allows us to access our engine globally. */
 	static Engine* GetEngine() { return EngineInstance; }
 
 	/* Returns our Player object. */
 	Player& GetPlayer();
+
+	float GetDeltaTime() const { return DeltaT; }
 
 	/* Initializes the Engine instance. */
 	static void Init()
@@ -79,35 +81,39 @@ public:
 		}
 	}
 
-private:
+protected:
 
 	/* Private functions for internal use only */
-	void Input();
-	void Update(float dtAsSeconds);
-	void Draw();
+	virtual void Input();
+	virtual void Update(float DeltaTime);
+	virtual void Draw();
+
+	/* engine's version of GetName since it doesn't inherit from Object */
+	virtual const char* GetName() const { return "Engine"; }
 
 private:
+
+	/* DELTA TIME */
+	float DeltaT = 0.0f;
+
+protected:
 	
 	// using this from my other project.
 	static Engine* EngineInstance; // static pointer to the engine.
 
 	/* GameMode Engine */
-	GameMode m_gameMode = GameMode::Menu;
-	GameState m_GameState = GameState::Playing;
+	GameMode GameMode = GameMode::Menu;
+	GameState GameState = GameState::Playing;
 	
 
 	/* A regular RenderWindow */
-	RenderWindow m_Window;
+	RenderWindow Window;
 
 	/* player object */
-	Player* m_Player;
-
-	/* DELTA TIME */
-	float m_dt = 0.0f;
-
+	Player* CurrentPlayer;
 
 	/* Input */
-	Keyboard::Key m_lastKeyPressed = Keyboard::Key::Unknown;
+	Keyboard::Key LastKeyPressed = Keyboard::Key::Unknown;
 
 	
 

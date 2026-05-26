@@ -16,7 +16,7 @@ public:
 	Player();
 
 	// object overrides
-	void Update(float dt) override;
+	void Update(float DeltaTime) override;
 	void Draw(RenderWindow& window) override;
 	const char* GetName() const override { return "Player"; }
 

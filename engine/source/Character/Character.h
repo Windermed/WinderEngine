@@ -15,7 +15,7 @@ public:
 	Character();
 
 	// object overrides
-	void Update(float dt) override;
+	void Update(float DeltaTime) override;
 	void Draw(RenderWindow& window) override;
 	bool IsOffScreen() const override { return false; }
 	const char* GetName() const override { return "Character"; }
