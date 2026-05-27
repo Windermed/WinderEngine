@@ -39,6 +39,7 @@ target_link_libraries(WinderEngine PUBLIC
 # expose the engine headers and SFML headers publicly
 target_include_directories(WinderEngine PUBLIC
 	source
+	source/ThirdParty
 	source/Core
 	source/Engine
 	source/Character
