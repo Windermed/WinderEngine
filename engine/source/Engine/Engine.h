@@ -7,21 +7,6 @@
 using namespace sf;
 using namespace std;
 
-enum class GameMode
-{
-	Menu = 0,
-	Particles = 1,
-	BulletHell = 2
-};
-
-enum class GameState
-{
-	Win = 0,
-	GameOver = 1,
-	Playing = 2,
-	None = 3
-};
-
 // we should make seperate classes in the future to not clutter up Engine.
 class Engine
 {
@@ -88,8 +73,21 @@ protected:
 	virtual void Update(float DeltaTime);
 	virtual void Draw();
 
+	virtual void OnKeyPressed(Keyboard::Key key) {}
+
 	/* engine's version of GetName since it doesn't inherit from Object */
 	virtual const char* GetName() const { return "Engine"; }
+
+	/* Draws the Collision. useful for debugging collision. */
+	void DrawCollisionDebug();
+
+	
+	void RegisterObject(Object* obj) { RegisteredObjects.push_back(obj); }
+
+	void UnregisterObject(Object* obj)
+	{
+		RegisteredObjects.erase(remove(RegisteredObjects.begin(), RegisteredObjects.end(), obj), RegisteredObjects.end());
+	}
 
 private:
 
@@ -100,11 +98,9 @@ protected:
 	
 	// using this from my other project.
 	static Engine* EngineInstance; // static pointer to the engine.
-
-	/* GameMode Engine */
-	GameMode GameMode = GameMode::Menu;
-	GameState GameState = GameState::Playing;
 	
+	/* registered objects */
+	vector<Object*> RegisteredObjects;
 
 	/* A regular RenderWindow */
 	RenderWindow Window;
@@ -115,6 +111,8 @@ protected:
 	/* Input */
 	Keyboard::Key LastKeyPressed = Keyboard::Key::Unknown;
 
-	
+	/* Debug */
+	bool bShowCollisionDebug = false;
+	bool bWasCollisionKeyPressed = false;
 
 };

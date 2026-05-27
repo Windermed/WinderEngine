@@ -71,6 +71,17 @@ void Engine::Input()
 		if (const auto* keyEvent = event->getIf<Event::KeyPressed>())
 		{
 			LastKeyPressed = keyEvent->code;
+
+			if (keyEvent->code == Keyboard::Key::Escape)
+				Window.close();
+
+			if (keyEvent->code == Keyboard::Key::F1)
+			{
+				bShowCollisionDebug = !bShowCollisionDebug;
+			}
+
+			// notify any subclass engine of whatever key we press.
+			OnKeyPressed(keyEvent->code);
 		}
 	}
 }
@@ -87,4 +98,36 @@ void Engine::Draw()
 {
 	Window.clear();
 	Window.display();
+}
+
+void Engine::DrawCollisionDebug()
+{
+	for (Object* obj : RegisteredObjects)
+	{
+		FloatRect Bounds = obj->GetBounds();
+		if (Bounds.size.x == 0 && Bounds.size.y == 0) continue;
+
+		RectangleShape DebugRect(Bounds.size);
+		DebugRect.setPosition(Bounds.position);
+		DebugRect.setFillColor(Color::Transparent);
+		DebugRect.setOutlineThickness(2.f);
+
+		// draw the collision using a different color based on the object type.
+		string objName = obj->GetName();
+
+		if (objName == "Player")
+		{
+			DebugRect.setOutlineColor(Color::Green);
+		}
+		else if (objName == "Enemy")
+		{
+			DebugRect.setOutlineColor(Color::Red);
+		}
+		else
+		{
+			DebugRect.setOutlineColor(Color::Yellow);
+		}
+
+		Window.draw(DebugRect);
+	}
 }

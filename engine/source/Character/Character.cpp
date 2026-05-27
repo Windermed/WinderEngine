@@ -5,14 +5,14 @@
 Character::Character()
 {
 	Position = Vector2f(960.0f, 540.0f);
-	PlayerSprite = GameSprite("content/textures/spr_placeholder.png", Position);
-	PlayerSprite.setPosition(Position);
+	CharacterSprite = GameSprite("content/textures/spr_placeholder.png", Position);
+	CharacterSprite.setPosition(Position);
 }
 
 void Character::ResetPosition()
 {
 	Position = Vector2f(960.0f, 540.0f);
-	PlayerSprite.setPosition(Position);
+	CharacterSprite.setPosition(Position);
 }
 
 void Character::HandleInput(float dt)
@@ -23,11 +23,11 @@ void Character::HandleInput(float dt)
 void Character::Update(float DeltaTime)
 {
 	HandleInput(DeltaTime);
-	PlayerSprite.setPosition(Position);
+	CharacterSprite.setPosition(Position);
 }
 
 void Character::Draw(RenderWindow& window)
 {
 	if (bIsVisible)
-		window.draw(PlayerSprite);
+		window.draw(CharacterSprite);
 }

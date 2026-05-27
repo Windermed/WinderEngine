@@ -20,12 +20,18 @@ public:
 	bool IsOffScreen() const override { return false; }
 	const char* GetName() const override { return "Character"; }
 
+	FloatRect GetBounds() const override
+	{
+		FloatRect Full = CharacterSprite.getGlobalBounds();
+		float CollisionHeight = Full.size.y * 0.32f;
+		return FloatRect({ Full.position.x, Full.position.y + Full.size.y - CollisionHeight }, { Full.size.x, CollisionHeight });
+	}
 	// position.
 	void ResetPosition();
 
 	// sprite
-	GameSprite& GetSprite() { return PlayerSprite;  }
-	void SetSprite(const string& path) { PlayerSprite.Load(path); }
+	virtual GameSprite& GetSprite() { return CharacterSprite;  }
+	void SetSprite(const string& path) { CharacterSprite.Load(path); }
 
 	// movement
 	void SetSpeed(float newSpeed) { Speed = newSpeed; }
@@ -35,14 +41,21 @@ public:
 	void SetVisible(bool visible) { bIsVisible = visible; }
 	bool IsVisible() const { return bIsVisible; }
 
+	// player direction.
+	string GetFacingDirection() const { return LastFacingDirection; }
+
 protected:
 	void HandleInput(float dt);
 
 protected:
 
 	// sprites 
-	GameSprite PlayerSprite;
+	GameSprite CharacterSprite;
 	float Speed = 420.0f;
 	bool bIsVisible = true;
+
+	// direction
+
+	std::string LastFacingDirection = "Down";
 };
 

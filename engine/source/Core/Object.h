@@ -26,8 +26,13 @@ public:
 	void SetShowCollision(bool show) { bShowCollision = show; }
 	bool IsShowingCollision() const { return bShowCollision; }
 
+	void SetCollision(bool collision) { bHasCollision = collision; }
+	bool HasCollision() const { return bHasCollision; }
+
+	virtual FloatRect GetBounds() const { return FloatRect(); }
 protected:
 	Vector2f Position;
 	bool bShowCollision = false;
+	bool bHasCollision = true; // toggle.
 };
 
