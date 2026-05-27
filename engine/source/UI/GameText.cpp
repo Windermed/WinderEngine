@@ -2,7 +2,7 @@
 #include "Engine.h"
 #include "Core/Constants.h"
 
-Font GameText::Font;
+Font GameText::DefaultFont;
 bool GameText::bIsFontLoaded = false;
 
 void GameText::Init(String text, Vector2f position, unsigned int fontSize, Color color)

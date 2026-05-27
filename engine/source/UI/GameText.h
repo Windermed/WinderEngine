@@ -75,14 +75,25 @@ public:
 	{
 		if (!bIsFontLoaded)
 		{
-			if (!Font.openFromFile(FONT_PATH))
+			if (!DefaultFont.openFromFile(FONT_PATH))
 			{
 				throw runtime_error("Font has failed to load!");
 			}
 
 			bIsFontLoaded = true;
 		}
-		return Font;
+		return DefaultFont;
+	}
+
+	// set font
+	void SetFont(const string& fontPath)
+	{
+		if (!OverrideFont.openFromFile(fontPath))
+		{
+			throw runtime_error("Failed to load font: " + fontPath + ". fallback to default font!");
+			return;
+		}
+		setFont(OverrideFont);
 	}
 
 	static Color HueToColor(float hue);
@@ -183,8 +194,10 @@ private:
 
 private:
 
-	static Font Font;
+	static Font DefaultFont;
 	static bool bIsFontLoaded;
+
+	Font OverrideFont;
 
 	bool bIsTextFlashing = false;
 	bool bIsTextVisible = true;

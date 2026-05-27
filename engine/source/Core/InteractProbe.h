@@ -11,6 +11,7 @@ public:
 		float W = playerBounds.size.x;
 		float H = playerBounds.size.y;
 
+		// spawns the probe depending on direction.
 		if (currentFacingDirection == "Up")
 		{
 			Bounds = FloatRect({ playerPos.x - ProbeSize / 2.f, playerBounds.position.y - ProbeSize }, { ProbeSize, ProbeSize });
