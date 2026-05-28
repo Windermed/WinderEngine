@@ -19,7 +19,7 @@ Engine::Engine()
 	srand(static_cast<unsigned int>(time(nullptr)));
 
 	// locking it to 1080p as its annoying to work on a widescreen monitor.
-	Window.create(VideoMode({ (unsigned int)SCREEN_WIDTH, (unsigned int)SCREEN_HEIGHT }), "BaseGame", Style::Default);
+	Window.create(VideoMode({ (unsigned int)SCREEN_WIDTH, (unsigned int)SCREEN_HEIGHT }), "Twinewood", Style::Default);
 	this->CurrentPlayer = new Player(); // we will need to use a pointer for our player.
 
 #ifdef NDEBUG
@@ -56,6 +56,11 @@ void Engine::Run()
 Player& Engine::GetPlayer()
 {
 	return *CurrentPlayer; // since we are using the ACTUAL player, we need to return a reference and not a copy.
+}
+
+void Engine::PlaySound(const string& fileName, float volume)
+{
+	SoundManager::GetInstance().PlaySoundPooled(fileName, volume);
 }
 
 void Engine::Input()

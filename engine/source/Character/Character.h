@@ -44,18 +44,39 @@ public:
 	// player direction.
 	string GetFacingDirection() const { return LastFacingDirection; }
 
+	// hit effect
+	void StartHitEffect();
+
+	void UpdateHitEffect(float DeltaTime);
+
 protected:
 	void HandleInput(float dt);
+
+	virtual Color GetBaseColor() const { return Color::White; }
 
 protected:
 
 	// sprites 
 	GameSprite CharacterSprite;
+
 	float Speed = 420.0f;
 	bool bIsVisible = true;
 
 	// direction
-
 	std::string LastFacingDirection = "Down";
+
+	bool bFlashing = false;
+	float FlashTimer = 0.0f;
+	float FlashDuration = 0.4f;
+	float flashRate = 0.05f; // how fast we flash.
+	float FlashTickTimer = 0.1f;
+	float bFlashVisible = true;
+
+	bool bShaking = false;
+	float ShakeTimer = 0.0f;
+	float ShakeDuration = 0.3f;
+	float ShakeMagnitude = 4.0f;
+	Vector2f ShakeBasePosition;
+
 };
 

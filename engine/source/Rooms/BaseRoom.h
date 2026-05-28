@@ -28,5 +28,5 @@ protected:
 	Image RoomImage; 
 	float RoomScale = 1.0f;
 
-	Vector2f PlayerSpawnPoint = { 960, 540 };
+	Vector2f PlayerSpawnPoint = { 920, 540 };
 };

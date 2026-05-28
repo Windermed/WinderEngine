@@ -13,7 +13,7 @@ StatBar::StatBar(const std::string& label, int value, int maxValue, Vector2f pos
 	Position = position;
 
 	LabelText = GameText(label, (unsigned int)(16.f * UIScale * LabelFontScale), Color::White, false);
-	ValueText = GameText("(" + std::to_string(value) + ")", (unsigned int)(16.f * UIScale * LabelFontScale), Color::White, false);
+	ValueText = GameText(std::to_string(value), (unsigned int)(16.f * UIScale * LabelFontScale), Color::White, false);
 
 	PointTexture.loadFromFile("content/textures/ui/spr_statbar_point.png");
 	EmptyPointTexture.loadFromFile("content/textures/ui/spr_statbar_empty.png");
@@ -49,14 +49,15 @@ void StatBar::Draw(RenderWindow& window)
 	
 	//Message("BarStartX: " << BarStartX << " TileScale: " << UIScale << " MaxValue: " << MaxValue);
 
-	ValueText.setString("(" + std::to_string(Value) + ")");
+	ValueText.setString(std::to_string(Value));
 	LabelText.DrawText();
 
 	float StartX = Position.x + 110.0f;
 	float ScaledW = TileW * UIScale;
 	float TileStep = ScaledW + TileGap;
 
-	Message("MaxValue is: " << MAX_STAT_VALUE);
+	//Message("MaxValue is: " << MAX_STAT_VALUE);
+
 	// go until the max value of stat points
 	for (int i = 0; i < MaxValue; i++)
 	{

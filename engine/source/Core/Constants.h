@@ -7,16 +7,23 @@ using namespace std;
 #define MessageNE(input) std::cout << input;
 #define InputResponse(input) std::cin >> input;
 
-const int SCREEN_WIDTH = 1920;
-const int SCREEN_HEIGHT = 1080;
+const int SCREEN_WIDTH = 1280;
+const int SCREEN_HEIGHT = 960;
 
 // font path TODO: Playtest on Linux to see if we need to add macros depending on platform.
 const string FONT_PATH = "content/fonts/burbankbigcondensed_bold.otf";
 
 const string BM_SPACE_FONT = "content/fonts/bm_space.ttf";
 
+const string SMT1_FONT = "content/fonts/smt1.ttf";
+
+const string SMT2_FONT = "content/fonts/smt2.ttf";
+
 // whether or not higher agility will determine who goes first in battle.
 const bool AGILITY_DETERMINES_TURN_ORDER = false;
+
+// toggle to allow for text to scroll or not.
+constexpr bool TEXT_SCROLLING_ENABLED = true;
 
 // maximum stat cap for all characters across the game. used with the stat bar class.
 static const int MAX_STAT_VALUE = 40;

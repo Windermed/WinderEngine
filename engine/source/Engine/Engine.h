@@ -66,6 +66,8 @@ public:
 		}
 	}
 
+	static void PlaySound(const std::string& fileName, float volume = 100.f);
+
 protected:
 
 	/* Private functions for internal use only */
@@ -80,13 +82,42 @@ protected:
 
 	/* Draws the Collision. useful for debugging collision. */
 	void DrawCollisionDebug();
-
 	
 	void RegisterObject(Object* obj) { RegisteredObjects.push_back(obj); }
 
 	void UnregisterObject(Object* obj)
 	{
 		RegisteredObjects.erase(remove(RegisteredObjects.begin(), RegisteredObjects.end(), obj), RegisteredObjects.end());
+	}
+
+	/* allows you to delay before running another func. useful if you want to wait for something to happen. */
+	void Delay(float seconds)
+	{
+		DelayDuration = seconds;
+		DelayTimer = 0.f;
+		bIsDelaying = true;
+
+		// block until a delay is complete. but still process any other window events.
+		Clock DelayClock;
+		while (bIsDelaying)
+		{
+			DelayTimer += DelayClock.restart().asSeconds();
+			if (DelayTimer >= DelayDuration)
+			{
+				bIsDelaying = false;
+			}
+
+			// in the meantime, keep other window events alive so that the game doesn't freeze.
+			while (const auto event = Window.pollEvent())
+			{
+				if (event->is<Event::Closed>())
+				{
+					Window.close();
+					bIsDelaying = false;
+				}
+			}
+		}
+		DelayTimer = 0.f;
 	}
 
 private:
@@ -114,5 +145,10 @@ protected:
 	/* Debug */
 	bool bShowCollisionDebug = false;
 	bool bWasCollisionKeyPressed = false;
+
+	/* delay related. */
+	float DelayTimer = 0.f;
+	float DelayDuration = 0.f;
+	bool  bIsDelaying = false;
 
 };
